@@ -39,9 +39,7 @@ app.post("/api/shorturl", function (req, res) {
     res.status(200).json({ original_url: url, short_url: shortUrl });
     console.log(urls);
   } else {
-    return res.status(400).json({
-      error: "invalid URL",
-    });
+    return res.status(400).json({ error: 'invalid url' });
   }
 });
 
@@ -52,9 +50,7 @@ app.get("/api/shorturl/:shortUrl", function (req, res) {
   if (urlObj) {
     res.redirect(urlObj.original_url);
   } else {
-    return res.status(400).json({
-      error: "invalid URL",
-    });
+    return res.status(400).json({ error: "invalid url" });
   }
 });
 
