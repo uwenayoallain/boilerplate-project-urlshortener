@@ -1,4 +1,5 @@
 const urls = require("./urls");
+const validurl = require("valid-url");
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
@@ -27,7 +28,8 @@ app.get("/api/hello", function (req, res) {
 
 app.post("/api/shorturl", function (req, res) {
   const url = req.body.url;
-  if (url.includes("http://") || url.includes("https://")) {
+
+  if (!validurl.isWebUri(url)) {
     let shortUrl = random(0, 10000);
     let urlObj = urls.find((obj) => obj.original_url === url);
     if (urlObj) {
@@ -35,11 +37,10 @@ app.post("/api/shorturl", function (req, res) {
     } else {
       urls.push({ original_url: url, short_url: shortUrl });
     }
-
     res.status(200).json({ original_url: url, short_url: shortUrl });
     console.log(urls);
   } else {
-    return res.status(400).json({ error: 'invalid url' });
+    return res.status(400).json({ error: "invalid URL" });
   }
 });
 
@@ -50,7 +51,7 @@ app.get("/api/shorturl/:shortUrl", function (req, res) {
   if (urlObj) {
     res.redirect(urlObj.original_url);
   } else {
-    return res.status(400).json({ error: "invalid url" });
+    return res.status(400).json({ error: "invalid URL" });
   }
 });
 
