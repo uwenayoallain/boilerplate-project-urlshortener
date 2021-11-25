@@ -6,6 +6,10 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 
+function returnError() {
+  return res.status(400).json({ error: "invalid url" });
+}
+
 // Basic Configuration
 const port = process.env.PORT || 3000;
 
@@ -30,12 +34,12 @@ app.get("/api/hello", function (req, res) {
 app.post("/api/shorturl", function (req, res) {
   const url = req.body.url;
   if (!validurl.isWebUri(url)) {
-    return res.status(400).json({ error: "invalid URL" });
+    returnError();
   }
   const urlObject = new URL(url);
   dns.lookup(urlObject.hostname, (err) => {
     if (err) {
-      return res.status(400).json({ error: "invalid URL" });
+      returnError();
     }
     let shortUrl = random(0, 10000);
     let urlObj = urls.find((obj) => obj.original_url === url);
@@ -56,7 +60,7 @@ app.get("/api/shorturl/:shortUrl", function (req, res) {
   if (urlObj) {
     res.redirect(urlObj.original_url);
   } else {
-    return res.status(400).json({ error: "invalid url" });
+    returnError();
   }
 });
 
