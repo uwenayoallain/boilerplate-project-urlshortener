@@ -7,7 +7,7 @@ const cors = require("cors");
 const app = express();
 
 function returnError() {
-  return res.json({ error: "invalid url" });
+  return res.json({ error: "Invalid URL" });
 }
 
 // Basic Configuration
